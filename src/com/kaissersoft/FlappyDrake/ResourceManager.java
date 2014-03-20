@@ -1,9 +1,10 @@
 /**
- * Copyright (C) 2013 Martin Varga <android@kul.is>
+ * Copyright (C) 2014 Christopher Herrera <eefretsoul@gmail.com>
  */
 package com.kaissersoft.FlappyDrake;
 
 
+import android.graphics.Typeface;
 import org.andengine.audio.sound.Sound;
 import org.andengine.audio.sound.SoundFactory;
 import org.andengine.engine.Engine;
@@ -23,102 +24,111 @@ import org.andengine.opengl.texture.region.TiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.adt.color.Color;
 
-import android.graphics.Typeface;
-
 public class ResourceManager {
-	private static final ResourceManager INSTANCE = new ResourceManager();
+    //==================================================================================================================
+    // CONSTANTS
+    //==================================================================================================================
+    private static final ResourceManager INSTANCE = new ResourceManager();
 
-	//font
-	public Font font;
-	
-	//common objects
-	public GameActivity activity;
-	public Engine engine;
-	public Camera camera;
-	public VertexBufferObjectManager vbom;
-	
-	//gfx
-	private BitmapTextureAtlas repeatingGroundAtlas;
-	
-	public TextureRegion repeatingGroundRegion;
-	
-	private BuildableBitmapTextureAtlas gameObjectsAtlas;
-	
-	public TextureRegion cloudRegion;
-	//public TiledTextureRegion dandelionRegion;
-	public TextureRegion pillarRegion;
+    //==================================================================================================================
+    // FIELDS
+    //==================================================================================================================
+
+    //font
+    public Font font;
+
+    //common objects
+    public GameActivity activity;
+    public Engine engine;
+    public Camera camera;
+    public VertexBufferObjectManager vbom;
+
+    //gfx
+    private BitmapTextureAtlas repeatingGroundAtlas;
+
+    public TextureRegion repeatingGroundRegion;
+
+    private BuildableBitmapTextureAtlas gameObjectsAtlas;
+
+    public TextureRegion cloudRegion;
+
+    public TextureRegion pillarRegion;
     public TiledTextureRegion drakeRegion;
-	
-	public TextureRegion bannerRegion;
-	
-	//sfx
-	public Sound sndFly;
-	public Sound sndFail;
+
+    public TextureRegion bannerRegion;
+
+    //sfx
+    public Sound sndFly;
+    public Sound sndFail;
     public Sound sndScore;
 
-    private ResourceManager() {}
-	
-	public static ResourceManager getInstance() {
-		return INSTANCE;
-	}
-	
-	public void create(GameActivity activity, Engine engine, Camera camera, VertexBufferObjectManager vbom) {
-		this.activity = activity;
-		this.engine = engine;
-		this.camera = camera;
-		this.vbom = vbom;
-	}
-	
-	public void loadFont() {
-		font = FontFactory.createStroke(activity.getFontManager(), activity.getTextureManager(), 256, 256, Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD), 50,
-				true, Color.WHITE_ABGR_PACKED_INT, 2, Color.BLACK_ABGR_PACKED_INT);
-		font.load();
-	}
+    //==================================================================================================================
+    // CONSTRUCTORS
+    //==================================================================================================================
+    private ResourceManager() {
+    }
 
-	public void unloadFont() {
-		font.unload();
-	}
-	
-	//splash
-	public void loadGameResources() {
-		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");	
-		
-		repeatingGroundAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.REPEATING_BILINEAR_PREMULTIPLYALPHA);
-		repeatingGroundRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(repeatingGroundAtlas, activity, "ground.png", 0, 0);
-		repeatingGroundAtlas.load();
-		
-		gameObjectsAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 
-					1024, 1024, BitmapTextureFormat.RGBA_8888, TextureOptions.BILINEAR);
-			
-		cloudRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(
-				gameObjectsAtlas, activity.getAssets(), "cloud.png");
-			
-		pillarRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(
-				gameObjectsAtlas, activity.getAssets(), "pillar.png");
-			
-		//dandelionRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(
-                //gameObjectsAtlas, activity.getAssets(), "dandelion.png", 2, 1);
-		
-		bannerRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(
-				gameObjectsAtlas, activity.getAssets(), "banner.png");
+    //==================================================================================================================
+    // METHODS
+    //==================================================================================================================
+    public static ResourceManager getInstance() {
+        return INSTANCE;
+    }
+
+    public void create(GameActivity activity, Engine engine, Camera camera, VertexBufferObjectManager vbom) {
+        this.activity = activity;
+        this.engine = engine;
+        this.camera = camera;
+        this.vbom = vbom;
+    }
+
+    public void loadFont() {
+        font = FontFactory.createStroke(activity.getFontManager(), activity.getTextureManager(), 256, 256, Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD), 50,
+                true, Color.WHITE_ABGR_PACKED_INT, 2, Color.BLACK_ABGR_PACKED_INT);
+        font.load();
+    }
+
+    public void unloadFont() {
+        font.unload();
+    }
+
+    //splash
+    public void loadGameResources() {
+        BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
+
+        repeatingGroundAtlas = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.REPEATING_BILINEAR_PREMULTIPLYALPHA);
+        repeatingGroundRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(repeatingGroundAtlas, activity, "ground.png", 0, 0);
+        repeatingGroundAtlas.load();
+
+        gameObjectsAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(),
+                1024, 1024, BitmapTextureFormat.RGBA_8888, TextureOptions.BILINEAR);
+
+        cloudRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(
+                gameObjectsAtlas, activity.getAssets(), "cloud.png");
+
+        pillarRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(
+                gameObjectsAtlas, activity.getAssets(), "pillar.png");
+
+        bannerRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(
+                gameObjectsAtlas, activity.getAssets(), "banner.png");
 
         drakeRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(
-                gameObjectsAtlas, activity.getAssets(),"drake.png",3,1);
-		
-		try {
-			gameObjectsAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(2, 0, 2));
-			gameObjectsAtlas.load();
-			
-		} catch (final TextureAtlasBuilderException e) {
-			throw new RuntimeException("Error while loading Splash textures", e);
-		}		
-		
-		try {
-			sndFly = SoundFactory.createSoundFromAsset(activity.getEngine().getSoundManager(), activity, "sfx/fly.wav");
-			sndFail = SoundFactory.createSoundFromAsset(activity.getEngine().getSoundManager(), activity, "sfx/fail.wav");
-            sndScore = SoundFactory.createSoundFromAsset(activity.getEngine().getSoundManager(),activity,"sfx/coin.wav");
-		} catch (Exception e) {
-			throw new RuntimeException("Error while loading sounds", e);
-		} 
-	}		
+                gameObjectsAtlas, activity.getAssets(), "drake.png", 3, 1);
+
+        try {
+            gameObjectsAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(2, 0, 2));
+            gameObjectsAtlas.load();
+
+        } catch (final TextureAtlasBuilderException e) {
+            throw new RuntimeException("Error while loading Splash textures", e);
+        }
+
+        try {
+            sndFly = SoundFactory.createSoundFromAsset(activity.getEngine().getSoundManager(), activity, "sfx/fly.wav");
+            sndFail = SoundFactory.createSoundFromAsset(activity.getEngine().getSoundManager(), activity, "sfx/fail.wav");
+            sndScore = SoundFactory.createSoundFromAsset(activity.getEngine().getSoundManager(), activity, "sfx/coin.wav");
+        } catch (Exception e) {
+            throw new RuntimeException("Error while loading sounds", e);
+        }
+    }
 }

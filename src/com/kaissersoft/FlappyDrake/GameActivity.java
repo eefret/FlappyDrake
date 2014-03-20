@@ -1,7 +1,12 @@
+/**
+ * Copyright (C) 2014 Christopher Herrera <eefretsoul@gmail.com>
+ */
 package com.kaissersoft.FlappyDrake;
 
-import java.io.IOException;
-
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.preference.PreferenceManager;
 import org.andengine.engine.Engine;
 import org.andengine.engine.LimitedFPSEngine;
 import org.andengine.engine.camera.Camera;
@@ -14,102 +19,110 @@ import org.andengine.entity.scene.Scene;
 import org.andengine.ui.activity.BaseGameActivity;
 import org.andengine.util.debug.Debug;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
-import android.preference.PreferenceManager;
+import java.io.IOException;
 
 public class GameActivity extends BaseGameActivity {
+    //==================================================================================================================
+    // FIELDS
+    //==================================================================================================================
 
-	private Camera camera;
-	
-	private GameScene gameScene;
+    private Camera camera;
 
-	
-	SharedPreferences prefs;
+    private GameScene gameScene;
 
-	@Override
-	public Engine onCreateEngine(EngineOptions pEngineOptions) {
-		Engine engine = new LimitedFPSEngine(pEngineOptions, Constants.FPS_LIMIT);
-		return engine;
-	}
 
-	public void setHighScore(int score) {
-    	SharedPreferences.Editor settingsEditor = prefs.edit();
-    	settingsEditor.putInt(Constants.KEY_HISCORE, score);
-    	settingsEditor.commit();
-	}
-	
-	public int getHighScore() {
-		return prefs.getInt(Constants.KEY_HISCORE, 0);		
-	}	
-	
-	@Override
-	public EngineOptions onCreateEngineOptions() {
-		
-		prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		camera = new FollowCamera(0, 0, Constants.CW, Constants.CH);
-		IResolutionPolicy resolutionPolicy = new FillResolutionPolicy();
-		EngineOptions engineOptions = new EngineOptions(true,
-				ScreenOrientation.PORTRAIT_FIXED, resolutionPolicy, camera);
-		engineOptions.getAudioOptions().setNeedsMusic(true).setNeedsSound(true);
-		engineOptions.setWakeLockOptions(WakeLockOptions.SCREEN_ON);
-		return engineOptions;
-	}
+    SharedPreferences prefs;
 
-	@Override
-	public void onCreateResources(
-			OnCreateResourcesCallback pOnCreateResourcesCallback)
-			throws IOException {
-		ResourceManager.getInstance().create(this, getEngine(), camera, getVertexBufferObjectManager());
-		ResourceManager.getInstance().loadFont();
-		ResourceManager.getInstance().loadGameResources();
-		pOnCreateResourcesCallback.onCreateResourcesFinished();
-	}
 
-	@Override
-	public void onCreateScene(OnCreateSceneCallback pOnCreateSceneCallback)
-			throws IOException {
-		gameScene = new GameScene();
-		pOnCreateSceneCallback.onCreateSceneFinished(gameScene);
+    //==================================================================================================================
+    // OVERRIDEN METHODS
+    //==================================================================================================================
+    @Override
+    public Engine onCreateEngine(EngineOptions pEngineOptions) {
+        Engine engine = new LimitedFPSEngine(pEngineOptions, Constants.FPS_LIMIT);
+        return engine;
+    }
 
-	}
+    @Override
+    public EngineOptions onCreateEngineOptions() {
 
-	@Override
-	public void onPopulateScene(Scene pScene,
-			OnPopulateSceneCallback pOnPopulateSceneCallback)
-			throws IOException {
-		pScene.reset();
-		pOnPopulateSceneCallback.onPopulateSceneFinished();
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        camera = new FollowCamera(0, 0, Constants.CW, Constants.CH);
+        IResolutionPolicy resolutionPolicy = new FillResolutionPolicy();
+        EngineOptions engineOptions = new EngineOptions(true,
+                ScreenOrientation.PORTRAIT_FIXED, resolutionPolicy, camera);
+        engineOptions.getAudioOptions().setNeedsMusic(true).setNeedsSound(true);
+        engineOptions.setWakeLockOptions(WakeLockOptions.SCREEN_ON);
+        return engineOptions;
+    }
 
-	}
+    @Override
+    public void onCreateResources(
+            OnCreateResourcesCallback pOnCreateResourcesCallback)
+            throws IOException {
+        ResourceManager.getInstance().create(this, getEngine(), camera, getVertexBufferObjectManager());
+        ResourceManager.getInstance().loadFont();
+        ResourceManager.getInstance().loadGameResources();
+        pOnCreateResourcesCallback.onCreateResourcesFinished();
+    }
 
-	@Override
-	public synchronized void onResumeGame() {
-		super.onResumeGame();
-		gameScene.resume();
-	}
+    @Override
+    public void onCreateScene(OnCreateSceneCallback pOnCreateSceneCallback)
+            throws IOException {
+        gameScene = new GameScene();
+        pOnCreateSceneCallback.onCreateSceneFinished(gameScene);
 
-	@Override
-	public synchronized void onPauseGame() {
-		super.onPauseGame();
-		gameScene.pause();
-	}
+    }
 
-	public void gotoPlayStore() {
-		try {
-			Intent i = new Intent(Intent.ACTION_VIEW, 
-					Uri.parse("market://details?id=" + getString(R.string.google_play_app_id)));
-			ResourceManager.getInstance().activity.startActivity(i);
+    @Override
+    public void onPopulateScene(Scene pScene,
+                                OnPopulateSceneCallback pOnPopulateSceneCallback)
+            throws IOException {
+        pScene.reset();
+        pOnPopulateSceneCallback.onPopulateSceneFinished();
 
-		} catch (Exception ex) {
-			Debug.w("Google Play Store not installed");
-			Intent i = new Intent(Intent.ACTION_VIEW, 
-					Uri.parse("http://play.google.com/store/apps/details?id=" + getString(R.string.google_play_app_id)));
-			ResourceManager.getInstance().activity.startActivity(i);
-		}
-		
-	}
+    }
 
-	
+    @Override
+    public synchronized void onResumeGame() {
+        super.onResumeGame();
+        gameScene.resume();
+    }
+
+    @Override
+    public synchronized void onPauseGame() {
+        super.onPauseGame();
+        gameScene.pause();
+    }
+
+    //==================================================================================================================
+    // METHODS
+    //==================================================================================================================
+
+    public void setHighScore(int score) {
+        SharedPreferences.Editor settingsEditor = prefs.edit();
+        settingsEditor.putInt(Constants.KEY_HISCORE, score);
+        settingsEditor.commit();
+    }
+
+    public int getHighScore() {
+        return prefs.getInt(Constants.KEY_HISCORE, 0);
+    }
+
+    public void gotoPlayStore() {
+        try {
+            Intent i = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("market://details?id=" + getString(R.string.google_play_app_id)));
+            ResourceManager.getInstance().activity.startActivity(i);
+
+        } catch (Exception ex) {
+            Debug.w("Google Play Store not installed");
+            Intent i = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/details?id=" + getString(R.string.google_play_app_id)));
+            ResourceManager.getInstance().activity.startActivity(i);
+        }
+
+    }
+
+
 }

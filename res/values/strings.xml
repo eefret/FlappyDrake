@@ -5,6 +5,6 @@
     <string name="action_settings">Settings</string>
     <string name="tap_to_play">TAP TO PLAY</string>
     <string name="hiscore">"HISCORE: "</string>
-    <string name="google_play_app_id">com.kaissersoft.flappydrake</string>
-    
+    <string name="google_play_app_id">com.kaissersoft.highflashlight</string>
+
 </resources>
